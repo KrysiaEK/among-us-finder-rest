@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'among_us_finder_rest.apps.users',
+    'among_us_finder_rest.apps.room',
 ]
 
 MIDDLEWARE = [
