@@ -11,7 +11,7 @@ class Room(models.Model):
     players_number = models.PositiveSmallIntegerField(validators=[MinValueValidator(4), MaxValueValidator(10)])
     searched_players_number = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(9)])
     comment = models.TextField(blank=True)
-    participants = models.ManyToManyField('users.User')
+    participants = models.ManyToManyField('users.User', blank=True)
     host = models.ForeignKey('users.User', blank=False, null=True, on_delete=models.SET_NULL, related_name='host')
 
 
