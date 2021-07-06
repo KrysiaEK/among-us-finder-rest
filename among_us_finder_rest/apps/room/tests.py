@@ -1,4 +1,5 @@
 from django.utils import timezone
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 
 from among_us_finder_rest.apps.room.factories import RoomFactory
@@ -15,7 +16,8 @@ class RoomTestCase(APITestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.client.force_login(self.user)
+        self.token = Token.objects.create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
     def test_users_list(self):
         response = self.client.get('/api/v1/users/')
@@ -39,6 +41,7 @@ class RoomTestCase(APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(rooms_after, rooms_before + 1)
         host_id = response.json().get('host')
+        self.assertEqual(response.json().get('participants')[0].get('id'), self.user.id)
         self.assertEqual(host_id, self.user.id)
 
     def test_join_room(self):
@@ -142,7 +145,8 @@ class MessageTestCase(APITestCase):
 
     def setUp(self):
         self.user = UserFactory()
-        self.client.force_login(self.user)
+        self.token = Token.objects.create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
     def test_create_message(self):
         self.room.participants.add(self.user)
@@ -181,6 +185,3 @@ class MessageTestCase(APITestCase):
         messages_after = Message.objects.count()
         self.assertEqual(response.status_code, 400)
         self.assertEqual(messages_after, messages_before)
-
-
-# spr czy ktoś nie jest participantem i prubuje dodać wiadomość

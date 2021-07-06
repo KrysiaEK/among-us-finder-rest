@@ -8,11 +8,20 @@ from rest_framework.status import HTTP_201_CREATED
 from .models import Room, Message
 from .serializers import RoomSerializer, MessageSerializer
 from ..users.models import User
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['game_start', 'map', 'level', 'players_number']
+    ordering_fields = ['game_start', 'level', 'players_number']
+
+    def perform_create(self, serializer):
+        room = serializer.save()
+        room.participants.add(self.request.user)
 
     def create(self, request, *args, **kwargs):
         data = {
@@ -23,7 +32,6 @@ class RoomViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        #dodać hosta automatycznie do pokoju
         return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
 
     @action(detail=True, methods=['PUT'])
@@ -60,7 +68,8 @@ class RoomViewSet(viewsets.ModelViewSet):
             return Response('You no host!',
                             status=status.HTTP_400_BAD_REQUEST)
 
-#wyszukiwarka muszę zrobić filtering: DjangoFilterBackend
+    def report_user(self, request, *args, **kwargs):
+        
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -73,7 +82,7 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = {
-            'author': self.request.user.id,
+            'author': request.user.id,
             'published': timezone.now(),
             **request.data
         }
