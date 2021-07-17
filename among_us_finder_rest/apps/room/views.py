@@ -1,4 +1,3 @@
-from django.core.mail import mail_admins
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import viewsets, status
@@ -6,17 +5,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 
+from among_us_finder_rest.apps.room.utilities import send_mail_to_admins
 from .models import Room, Message
 from .serializers import RoomSerializer, MessageSerializer
 from ..users.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 
-
-def send_mail_to_admins(message):
-    subject = "Abuse report"
-    mail_admins(subject, message)
-#przenieść do pliku utils
 
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
@@ -103,4 +98,3 @@ class MessageViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=HTTP_201_CREATED, headers=headers)
-

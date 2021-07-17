@@ -6,6 +6,7 @@ from .models import Room, Message
 class Room(admin.ModelAdmin):
 	pass
 
+
 @admin.register(Message)
 class Message(admin.ModelAdmin):
 	pass
