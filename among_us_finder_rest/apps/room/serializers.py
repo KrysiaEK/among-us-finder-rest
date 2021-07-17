@@ -4,7 +4,7 @@ from among_us_finder_rest.apps.users.serializers import UserSerializer
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    #  author = serializers.UserSerializer(many=False, slug_field='username', read_only=True)
+    # author = serializers.UserSerializer(many=False, slug_field='username', read_only=True)
     # author = UserSerializer(many=False)
 
     class Meta:

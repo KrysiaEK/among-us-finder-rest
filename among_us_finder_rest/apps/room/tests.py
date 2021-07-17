@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.utils import timezone
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -134,6 +136,22 @@ class RoomTestCase(APITestCase):
             format='json',
         )
         self.assertEqual(response.status_code, 400)
+
+    def test_report_user_mail_admins(self):
+        user_reported = UserFactory()
+        comment = 'They cheated!'
+        url = f'/api/v1/rooms/{self.room.id}/report_user/'
+        with patch('among_us_finder_rest.apps.room.views.send_mail_to_admins') as mock:
+            response = self.client.post(
+                url,
+                data={
+                    'reported_user_id': user_reported.id,
+                    'comment': comment,
+                },
+                format='json',
+            )
+            self.assertEqual(response.status_code, 200)
+            mock.assert_called_once_with(f'User {self.user.id} reported user {user_reported.id} because {comment}')
 
 
 class MessageTestCase(APITestCase):

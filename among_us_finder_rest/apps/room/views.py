@@ -1,3 +1,4 @@
+from django.core.mail import mail_admins
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import viewsets, status
@@ -11,6 +12,11 @@ from ..users.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 
+
+def send_mail_to_admins(message):
+    subject = "Abuse report"
+    mail_admins(subject, message)
+#przenieść do pliku utils
 
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
@@ -68,8 +74,14 @@ class RoomViewSet(viewsets.ModelViewSet):
             return Response('You no host!',
                             status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=True, methods=['POST'])
     def report_user(self, request, *args, **kwargs):
-        
+        reporting_user = self.request.user
+        reported_user = get_object_or_404(User, id=request.data.get('reported_user_id'))
+        comment = request.data.get('comment')
+        message = f'User {reporting_user.id} reported user {reported_user.id} because {comment}'
+        send_mail_to_admins(message)
+        return Response(status=status.HTTP_200_OK)
 
 
 class MessageViewSet(viewsets.ModelViewSet):
