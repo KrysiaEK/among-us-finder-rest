@@ -13,7 +13,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 
 
-class RoomViewSet(viewsets.ModelViewSet):
+class RoomViewSet(viewsets.mixins.CreateModelMixin, viewsets.mixins.RetrieveModelMixin, viewsets.mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
@@ -79,7 +80,8 @@ class RoomViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_200_OK)
 
 
-class MessageViewSet(viewsets.ModelViewSet):
+class MessageViewSet(viewsets.mixins.CreateModelMixin, viewsets.mixins.RetrieveModelMixin, viewsets.mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     #  permission_classes =
