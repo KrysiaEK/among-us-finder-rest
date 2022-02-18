@@ -1,6 +1,7 @@
 from django.db import models
-from among_us_finder_rest.apps.room.constants import MapChoices, LevelChoices
 from django.core.validators import MaxValueValidator, MinValueValidator
+
+from among_us_finder_rest.apps.rooms.constants import MapChoices, LevelChoices
 
 
 class Room(models.Model):

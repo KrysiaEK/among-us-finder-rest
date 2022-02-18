@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from among_us_finder_rest.apps.users.models import User
 
 

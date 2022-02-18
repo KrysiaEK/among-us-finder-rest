@@ -2,8 +2,8 @@ import factory
 from django.utils import timezone
 from factory.fuzzy import FuzzyChoice, FuzzyInteger
 
-from among_us_finder_rest.apps.room.constants import LevelChoices, MapChoices
-from among_us_finder_rest.apps.room.models import Room
+from among_us_finder_rest.apps.rooms.constants import LevelChoices, MapChoices
+from among_us_finder_rest.apps.rooms.models import Room
 from among_us_finder_rest.apps.users.factories import UserFactory
 
 

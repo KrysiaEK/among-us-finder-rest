@@ -4,22 +4,27 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
-
-from among_us_finder_rest.apps.room.utilities import send_mail_to_admins
-from .models import Room, Message
-from .serializers import RoomSerializer, MessageSerializer
-from ..users.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+
+from among_us_finder_rest.apps.rooms.utilities import send_mail_to_admins
+from among_us_finder_rest.apps.rooms.models import Room, Message
+from among_us_finder_rest.apps.rooms.serializers import RoomSerializer, MessageSerializer
+from among_us_finder_rest.apps.users.models import User
+
 
 
 class RoomViewSet(viewsets.mixins.CreateModelMixin, viewsets.mixins.RetrieveModelMixin, viewsets.mixins.ListModelMixin,
                   viewsets.GenericViewSet):
+
+    """View to create, join, leave room. Allows also remove participants or report abuse"""
+
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['game_start', 'map', 'level', 'players_number']
     ordering_fields = ['game_start', 'level', 'players_number']
+
 
     def perform_create(self, serializer):
         room = serializer.save()
@@ -82,6 +87,9 @@ class RoomViewSet(viewsets.mixins.CreateModelMixin, viewsets.mixins.RetrieveMode
 
 class MessageViewSet(viewsets.mixins.CreateModelMixin, viewsets.mixins.RetrieveModelMixin, viewsets.mixins.ListModelMixin,
                   viewsets.GenericViewSet):
+
+    """View to create messages"""
+
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     #  permission_classes =

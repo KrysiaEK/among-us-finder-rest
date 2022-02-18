@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from among_us_finder_rest.apps.room.models import Room, Message
+
+from among_us_finder_rest.apps.rooms.models import Room, Message
 from among_us_finder_rest.apps.users.serializers import UserSerializer
 
 

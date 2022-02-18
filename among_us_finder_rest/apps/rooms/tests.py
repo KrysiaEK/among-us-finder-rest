@@ -4,16 +4,15 @@ from django.utils import timezone
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 
-from among_us_finder_rest.apps.room.factories import RoomFactory
-from among_us_finder_rest.apps.room.models import Room, Message
+from among_us_finder_rest.apps.rooms.factories import RoomFactory
+from among_us_finder_rest.apps.rooms.models import Room, Message
 from among_us_finder_rest.apps.users.factories import UserFactory
 
 
 class RoomTestCase(APITestCase):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpTestData(cls):
         cls.room = RoomFactory()
 
     def setUp(self):
@@ -141,7 +140,7 @@ class RoomTestCase(APITestCase):
         user_reported = UserFactory()
         comment = 'They cheated!'
         url = f'/api/v1/rooms/{self.room.id}/report_user/'
-        with patch('among_us_finder_rest.apps.room.views.send_mail_to_admins') as mock:
+        with patch('among_us_finder_rest.apps.rooms.views.send_mail_to_admins') as mock:
             response = self.client.post(
                 url,
                 data={

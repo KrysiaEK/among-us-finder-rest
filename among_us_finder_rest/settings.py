@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
     'among_us_finder_rest.apps.users',
-    'among_us_finder_rest.apps.room',
+    'among_us_finder_rest.apps.rooms',
 ]
 
 MIDDLEWARE = [
